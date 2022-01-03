@@ -1,0 +1,31 @@
+@use '../../scss' as *;
+
+.admin {
+  padding: 8rem 6rem 2rem 4rem;
+  @include flex(unset, unset);
+
+}
+
+.sidebar {
+  height: 60vh;
+  padding-top: 3rem;
+
+  &__nav {
+    height: 100%;
+    @include flex(unset, unset);
+    flex-direction: column;
+    background-color: $light-bg;
+    padding: 2rem 1rem;
+    border-radius: 5px;
+  }
+
+  &__list {
+
+  }
+
+  &__link {
+    padding: .5rem 1rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+}

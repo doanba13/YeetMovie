@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import '../node_modules/antd/dist/antd.css';
+import 'swiper/swiper.min.css';
+import './assets/boxicons-2.0.7/css/boxicons.min.css';
+import './App.scss';
+
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
+import Routes from './config/Routes';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <>
+            <Header/>
+            <Routes/>
+            <Footer/>
+        </>
+    );
 }
 
 export default App;
