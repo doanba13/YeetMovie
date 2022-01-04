@@ -1,6 +1,6 @@
 import {Card} from "antd";
 import AuthContext from "../../store/AuthContext";
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Formik, Form} from "formik";
 import * as Yup from 'yup';
 import './ProfileEdit.scss';
@@ -8,7 +8,6 @@ import axiosInstance from "../../api/axiosInstance";
 
 const ProfileEdit = () => {
     const authCtx = useContext(AuthContext);
-
     const validate = Yup.object({
         fullName: Yup.string()
             .min(6, "Mininum 2 characters")
@@ -30,10 +29,10 @@ const ProfileEdit = () => {
         <Card title={`${authCtx.user}'s Profile`}
               style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}} headStyle={{color: '#fff'}}>
             <Formik initialValues={{
-                fullName: '',
+                fullName: authCtx.user.fullName,
                 password: '',
-                email: '',
-                username: authCtx.user,
+                email: authCtx.user.email,
+                username: authCtx.user.username,
             }}
                     validationSchema={validate}
                     onSubmit={(value) => {

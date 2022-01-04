@@ -1,6 +1,7 @@
 import {createContext, useState, useEffect} from 'react'
 import jwt_decode from "jwt-decode";
 import {useHistory} from 'react-router-dom'
+import axiosInstance from "../api/axiosInstance";
 
 const AuthContext = createContext()
 
@@ -14,8 +15,7 @@ export const AuthProvider = ({children}) => {
 
     const history = useHistory()
 
-    let loginUser = (data) => {
-        console.log(data);
+    let loginUser = async (data) => {
         const accessToken = data.accessToken;
         try {
             const token = jwt_decode(accessToken);
@@ -25,8 +25,13 @@ export const AuthProvider = ({children}) => {
         } catch (error) {
             console.log('error token');
         }
+        await axiosInstance.get('/api/user').then(res => {
+            setUser(res.data.data)
+        }).catch(err => {
+            console.log(err)
+        })
     }
-
+    console.log(user);
     let logoutUser = () => {
         setAuthTokens(null)
         setUser(null)

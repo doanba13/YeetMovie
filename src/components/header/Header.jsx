@@ -71,7 +71,7 @@ const Header = () => {
                     </li>}
                     {authCtx.user &&
                         <li className={active ? 'active' : ''}
-                            onClick={() => authCtx.user === 'admin' ? history.push('/admin') : history.push('/user')}>
+                            onClick={() => authCtx.user.username === 'admin' ? history.push('/admin') : history.push('/user')}>
                             <div className='user'>
                                 <div className='user__logo'>
                                     <img src={userImg}
