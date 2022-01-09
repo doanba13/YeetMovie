@@ -1,6 +1,6 @@
 import {Card} from "antd";
 import AuthContext from "../../store/AuthContext";
-import {useContext, useEffect, useState} from "react";
+import {useContext} from "react";
 import {Formik, Form} from "formik";
 import * as Yup from 'yup';
 import './ProfileEdit.scss';

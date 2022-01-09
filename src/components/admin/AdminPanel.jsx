@@ -1,4 +1,4 @@
-import {Link, Route, Switch, BrowserRouter, useRouteMatch, useParams} from "react-router-dom";
+import {Link, Route, Switch, useRouteMatch} from "react-router-dom";
 import {useContext} from "react";
 import AuthContext from "../../store/AuthContext";
 import './adminPanel.scss';
@@ -11,8 +11,6 @@ import ProfileEdit from "../user/ProfileEdit";
 
 const AdminPanel = () => {
     let {path, url} = useRouteMatch();
-    const params = useParams();
-    console.log(params);
     const authCtx = useContext(AuthContext);
     return (
         <section className='admin'>
