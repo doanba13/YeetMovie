@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import AuthContext from "../../store/AuthContext";
 import {useContext} from "react";
 import axios from "axios";
+import {message} from "antd";
 
 
 const Login = () => {
@@ -40,9 +41,11 @@ const Login = () => {
                     .then(response => {
                         const authData = response.data;
                         authCtx.loginUser(authData.data);
+                        message.success('Đăng nhập thành công')
                     })
                     .catch(error => {
                         console.log(error);
+                        message.error('Không thể đăng nhập =))')
                     });
             }}
         >
