@@ -7,6 +7,10 @@
 }
 
 .sidebar {
+  &a:active {
+    color: $main-color;
+  }
+
   height: 60vh;
   padding-top: 3rem;
 

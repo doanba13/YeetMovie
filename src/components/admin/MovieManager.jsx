@@ -1,60 +1,13 @@
 import {Form, Formik} from "formik";
 import axiosInstance from "../../api/axiosInstance";
-import {Card, message, Space, Table} from "antd";
+import {Card, message, Space, Table, Modal} from "antd";
 import * as Yup from "yup";
-import {category} from "../../api/tmdbConfig";
 import {useEffect, useState} from "react";
 
-const columns = [
-    {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        align: 'center'
-    },
-    {
-        title: 'Category',
-        dataIndex: 'category',
-        key: 'category',
-        align: 'center'
-    },
-    {
-        title: 'Create date',
-        dataIndex: 'createDate',
-        key: 'createDate',
-        align: 'center'
-    },
-    {
-        title: 'Update date',
-        dataIndex: 'updateDate',
-        key: 'updateDate',
-        align: 'center'
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => (
-            <Space size="middle">
-                <a onClick={() => {
-                    message.error('This feature hadnt done yet  ;.;')
-                }}>Update</a>
-                <a onClick={() => {
-                    axiosInstance.delete(`/api/category/${record.id}`).then((res) => {
-                        if (res.status === 200) {
-                            message.success('Type has been deleted :(');
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                        message.error('Can not deleted type :(');
-                    });
-                }}>Delete</a>
-            </Space>
-        ),
-        align: 'center',
-    },
-];
 
 const MovieManager = () => {
+    const [img, setImg] = useState(null);
+    const [movieData, setMovieData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [typeData, setTypeData] = useState([]);
 
@@ -69,7 +22,7 @@ const MovieManager = () => {
             setTypeData(res.data);
 
         }).catch(err => {
-            message.error("Error while getting category data :'(");
+            message.error("Error while getting type data :'(");
         })
     }, [])
 
@@ -93,67 +46,153 @@ const MovieManager = () => {
             .required("Required!"),
     });
 
-    return (
-        <Card title='Movie Category'
-              style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}} headStyle={{color: '#fff'}}>
-            <Formik initialValues={{
-                title: '',
-                description: '',
-                trailer: '',
-                typeId: '',
-                categoryId: '',
-            }}
-                    validationSchema={validate}
-                    onSubmit={(value) => {
-                        axiosInstance.post('/api/movie', value, {
-                            'Content-Type': 'application/json'
-                        }).then(res => {
+    const onFileChange = (event) => {
+        setImg(event.target.files[0]);
+    };
+    const onFileUpload = (id) => {
+
+        const formData = new FormData();
+        formData.append(
+            "image",
+            img
+        );
+        axiosInstance.patch(`/api/movie/${id}/movie-image`, formData, {
+            'Content-Type': 'multipart/form-data'
+        }).then(res => {
+            if (res.status === 200) {
+                message.success('Thumbnail upload successfully ;)')
+            }
+        }).catch(err => {
+            console.log(err)
+            message.success('Thumbnail upload failed ;(')
+        })
+    };
+
+    const addMovieThumbnail = (id) => {
+            Modal.confirm({
+                title: 'Movie thumbnail',
+                content: (
+                    <div className='form-control1'>
+                        <input className='form-control1__input' type="file" onChange={onFileChange}/>
+                        <button style={{width: '50%', marginTop: '.5rem'}} className='btn' onClick={() => onFileUpload(id)}>
+                            Upload
+                        </button>
+                    </div>
+                ),
+                okText: 'ok',
+            });
+        }
+    ;
+
+    const columns = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'id',
+            align: 'center'
+        },
+        {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            align: 'center'
+        },
+        {
+            title: 'Avatar',
+            dataIndex: 'avatar',
+            key: 'avatar',
+            align: 'center',
+            render: (avatar, record) => (
+                <a onClick={() => addMovieThumbnail(record.id)}>{!avatar ? 'Add movie thumbnail' : 'Update movie thumbnail'}</a>
+            )
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (record) => (
+                <Space size="middle">
+                    <a onClick={() => {
+                        message.error('This feature hadnt done yet  ;.;')
+                    }}>Update</a>
+                    <a onClick={() => {
+                        axiosInstance.delete(`/api/movie/${record.id}`).then((res) => {
                             if (res.status === 200) {
-                                message.success('Movie added successfully ;)')
+                                message.success('Movie has been deleted :(');
                             }
                         }).catch(err => {
-                            console.log(err)
-                            message.error('Movie added fail :(')
-                        })
-                        console.log(value);
-                    }}
-            >
-                {formik => (
-                    <div className='content1'>
-                        <Form className='form1'>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='title'>Add title</label>
-                                <span className='form-control1__span'>
+                            console.log(err);
+                            message.error('Can not deleted type :(');
+                        });
+                    }}>Delete</a>
+                </Space>
+            ),
+            align: 'center',
+        },
+    ];
+
+
+    return (
+        <>
+            <Card title='Movie Category'
+                  style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}}
+                  headStyle={{color: '#fff'}}>
+                <Formik initialValues={{
+                    title: '',
+                    description: '',
+                    trailer: '',
+                    typeId: '',
+                    categoryId: '',
+                }}
+                        validationSchema={validate}
+                        onSubmit={(value) => {
+                            axiosInstance.post('/api/movie', value, {
+                                'Content-Type': 'application/json'
+                            }).then(res => {
+                                if (res.status === 200) {
+                                    message.success('Movie added successfully ;)')
+                                }
+                            }).catch(err => {
+                                console.log(err)
+                                message.error('Movie added fail :(')
+                            })
+                        }}
+                >
+                    {formik => (
+                        <div className='content1'>
+                            <Form className='form1'>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='title'>Add title</label>
+                                    <span className='form-control1__span'>
                         <input type='text' name='title' className='form-control1__input'
                                value={formik.values.title} onChange={formik.handleChange}/>
-                                    {formik.errors.title && formik.touched.title && (
-                                        <p>{formik.errors.title}</p>
-                                    )}
+                                        {formik.errors.title && formik.touched.title && (
+                                            <p>{formik.errors.title}</p>
+                                        )}
                                 </span>
-                            </div>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='description'>Add description</label>
-                                <span className='form-control1__span'>
+                                </div>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='description'>Add description</label>
+                                    <span className='form-control1__span'>
                         <input type='text' name='description' className='form-control1__input'
                                value={formik.values.description} onChange={formik.handleChange}/>
-                                    {formik.errors.description && formik.touched.description && (
-                                        <p>{formik.errors.description}</p>
-                                    )}
+                                        {formik.errors.description && formik.touched.description && (
+                                            <p>{formik.errors.description}</p>
+                                        )}
                                 </span>
-                            </div>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='trailer'>Add trailer</label>
-                                <span className='form-control1__span'>
+                                </div>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='trailer'>Add trailer</label>
+                                    <span className='form-control1__span'>
                         <input type='text' name='trailer' className='form-control1__input'
                                value={formik.values.trailer} onChange={formik.handleChange}/>
-                                    {formik.errors.trailer && formik.touched.trailer && (
-                                        <p>{formik.errors.trailer}</p>
-                                    )}
+                                        {formik.errors.trailer && formik.touched.trailer && (
+                                            <p>{formik.errors.trailer}</p>
+                                        )}
                                 </span>
-                            </div>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='typeId'>Type</label>
-                                <span className='form-control1__span'>
+                                </div>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='typeId'>Type</label>
+                                    <span className='form-control1__span'>
                         <select type='select' name='typeId' className='form-control1__input'
                                 onChange={formik.handleChange}>
                        {
@@ -162,14 +201,14 @@ const MovieManager = () => {
                            )
                        }
                         </select>
-                                    {formik.errors.typeId && formik.touched.typeId && (
-                                        <p>{formik.errors.typeId}</p>
-                                    )}
+                                        {formik.errors.typeId && formik.touched.typeId && (
+                                            <p>{formik.errors.typeId}</p>
+                                        )}
                         </span>
-                            </div>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='categoryId'>Category</label>
-                                <span className='form-control1__span'>
+                                </div>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='categoryId'>Category</label>
+                                    <span className='form-control1__span'>
                         <select type='select' name='categoryId' className='form-control1__input'
                                 onChange={formik.handleChange}>
                        {
@@ -178,19 +217,19 @@ const MovieManager = () => {
                            )
                        }
                         </select>
-                                    {formik.errors.categoryId && formik.touched.categoryId && (
-                                        <p>{formik.errors.categoryId}</p>
-                                    )}
+                                        {formik.errors.categoryId && formik.touched.categoryId && (
+                                            <p>{formik.errors.categoryId}</p>
+                                        )}
                         </span>
-                            </div>
-                            <div className='form-control1__btn mb-2'>
-                                <button className='btn' type='submit'>Add</button>
-                            </div>
-                        </Form>
-                    </div>
-                )}
-            </Formik>
-            {/*         <Formik initialValues={{
+                                </div>
+                                <div className='form-control1__btn mb-2'>
+                                    <button className='btn' type='submit'>Add</button>
+                                </div>
+                            </Form>
+                        </div>
+                    )}
+                </Formik>
+                {/*         <Formik initialValues={{
                 path: ''
            }}
                     validationSchema={validateImg}
@@ -224,54 +263,57 @@ const MovieManager = () => {
                 )}
             </Formik>
 */}
-            <Formik initialValues={{
-                search: '',
-                order: 'desc'
-            }}
-                    validationSchema={validateSearch}
-                    onSubmit={(value) => {
-                        axiosInstance.get(`/api/basic/category?search=${value.search}&order=${value.order}`).then(res => {
-                            setCategoryData(res.data);
-                        }).catch(err => {
-                            message.error("Error while getting type data :'(");
-                        })
-                    }}
-            >
-                {formikSearch => (
-                    <div className='content1'>
-                        <Form className='form1'>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='search'>Type</label>
-                                <span className='form-control1__span'>
+                <Formik initialValues={{
+                    search: '',
+                    order: 'desc'
+                }}
+                        validationSchema={validateSearch}
+                        onSubmit={(value) => {
+                            axiosInstance.get(`/api/basic/movie?typeId=&categoryId=&order=&search=&order=`).then(res => {
+                                setMovieData(res.data.data);
+                            }).catch(err => {
+                                message.error("Error while getting type data :'(");
+                            })
+                        }}
+                >
+                    {formikSearch => (
+                        <div className='content1'>
+                            <Form className='form1'>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='search'>Type</label>
+                                    <span className='form-control1__span'>
                         <input type='text' name='search' className='form-control1__input'
                                value={formikSearch.values.search} onChange={formikSearch.handleChange}
                                placeholder={'Find all type? just click search ;)'}/>
-                                    {formikSearch.errors.search && formikSearch.touched.search && (
-                                        <p>{formikSearch.errors.search}</p>
-                                    )}
+                                        {formikSearch.errors.search && formikSearch.touched.search && (
+                                            <p>{formikSearch.errors.search}</p>
+                                        )}
                         </span>
-                            </div>
-                            <div className='form-control1'>
-                                <label className='form-control1__label' id='order'>Order</label>
-                                <span className='form-control1__span'>
+                                </div>
+                                <div className='form-control1'>
+                                    <label className='form-control1__label' id='order'>Order</label>
+                                    <span className='form-control1__span'>
                         <select type='select' name='order' className='form-control1__input'
                                 onChange={formikSearch.handleChange}>
                         <option value='desc'>Descend</option>
                         <option value='insc'>Increase</option>
                         </select>
-                                    {formikSearch.errors.type && formikSearch.touched.type && (
-                                        <p>{formikSearch.errors.type}</p>
-                                    )}
+                                        {formikSearch.errors.type && formikSearch.touched.type && (
+                                            <p>{formikSearch.errors.type}</p>
+                                        )}
                         </span>
-                            </div>
-                            <div className='form-control1__btn mb-2'>
-                                <button className='btn' type='submit'>Search</button>
-                            </div>
-                        </Form>
-                    </div>
-                )}
-            </Formik>
-        </Card>
+                                </div>
+                                <div className='form-control1__btn mb-2'>
+                                    <button className='btn' type='submit'>Search</button>
+                                </div>
+                            </Form>
+                        </div>
+                    )}
+                </Formik>
+                {movieData && <Table rowKey={(record) => record.id} dataSource={movieData.content} columns={columns}
+                                     pagination={false}/>}
+            </Card>
+        </>
     );
 };
 

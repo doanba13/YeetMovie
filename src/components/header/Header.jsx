@@ -59,11 +59,11 @@ const Header = () => {
                             </li>
                         ))
                     }
-                    <li className={active ? 'active' : ''}>
+                    {authCtx.user && <li className={active ? 'active' : ''}>
                         <a onClick={authCtx.logoutUser}>
                             Logout
                         </a>
-                    </li>
+                    </li>}
                     {!authCtx.user && <li className={active ? 'active' : ''}>
                         <Link to={'/login'}>
                             Login
@@ -71,7 +71,7 @@ const Header = () => {
                     </li>}
                     {authCtx.user &&
                         <li className={active ? 'active' : ''}
-                            onClick={() => authCtx.user.username === 'admin' ? history.push('/admin') : history.push('/user')}>
+                            onClick={() => authCtx.user === 'admin' ? history.push('/admin') : history.push('/user')}>
                             <div className='user'>
                                 <div className='user__logo'>
                                     <img src={userImg}

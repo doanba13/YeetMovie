@@ -1,12 +1,13 @@
-import {Card} from "antd";
+import {Card, message} from "antd";
 import AuthContext from "../../store/AuthContext";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {Formik, Form} from "formik";
 import * as Yup from 'yup';
 import './ProfileEdit.scss';
 import axiosInstance from "../../api/axiosInstance";
 
 const ProfileEdit = () => {
+    const [img, setImg] = useState(null);
     const authCtx = useContext(AuthContext);
     const validate = Yup.object({
         fullName: Yup.string()
@@ -20,19 +21,37 @@ const ProfileEdit = () => {
             .min(6, "Minimum 6 characters")
             .required("Required!"),
     });
-    const validatePic = Yup.object({
-        avatar: Yup.string()
-            .required("Required!"),
-    });
+
+    const onFileChange = (event) => {
+        setImg(event.target.files[0]);
+    };
+    const onFileUpload = (id) => {
+
+        const formData = new FormData();
+        formData.append(
+            "image",
+            img
+        );
+        axiosInstance.patch('/api/user/user-image', formData, {
+            'Content-Type': 'multipart/form-data'
+        }).then(res => {
+            if (res.status === 200) {
+                message.success('Avatar upload successfully ;)')
+            }
+        }).catch(err => {
+            console.log(err)
+            message.success('Avatar upload failed ;(')
+        })
+    };
 
     return (
         <Card title={`${authCtx.user}'s Profile`}
               style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}} headStyle={{color: '#fff'}}>
             <Formik initialValues={{
-                fullName: authCtx.user.fullName,
+                fullName: authCtx.userData.fullName,
                 password: '',
-                email: authCtx.user.email,
-                username: authCtx.user.username,
+                email: authCtx.userData.email,
+                username: authCtx.userData.username,
             }}
                     validationSchema={validate}
                     onSubmit={(value) => {
@@ -99,41 +118,13 @@ const ProfileEdit = () => {
                     </div>
                 )}
             </Formik>
-            <Formik initialValues={{
-                avatar: '',
-            }} validationSchema={validatePic}
-                    onSubmit={(value) => {
-                        let formData = new FormData();
-                        formData.append('image', value.avatar);
-                        axiosInstance.patch('/api/user/user-image', formData, {
-                            'Content-Type': 'multipart/form-data'
-                        })
-                            .then(res => {
-                                const data = res.data;
-                                console.log(data);
-                            }).catch(err => {
-                            console.log(err)
-                        })
-                    }}
-            >
-                {formikPic => (<div className='content1'>
-                    <Form className='form1'>
-                        <div className='form-control1'>
-                            <label className='form-control1__label' id='avatar'>Upload your avatar</label>
-                            <span className='form-control1__span'>
-                        <input type='file' name='avatar' className='form-control1__input' accept="image/jpg"
-                               value={formikPic.values.avatar} onChange={formikPic.handleChange}/>
-                                {formikPic.errors.avatar && formikPic.touched.avatar && (
-                                    <p>{formikPic.errors.avatar}</p>
-                                )}
-                                </span>
-                        </div>
-                        <div className='form-control1__btn mb-2'>
-                            <button className='btn' type='submit'>Upload</button>
-                        </div>
-                    </Form>
-                </div>)}
-            </Formik>
+            <div className='form-control1'>
+                <input className='form-control1__input' type="file" onChange={onFileChange}/>
+                <button style={{width: '50%', marginTop: '.5rem'}} className='btn'
+                        onClick={() => onFileUpload(authCtx.userData.id)}>
+                    Upload
+                </button>
+            </div>
         </Card>
     );
 }

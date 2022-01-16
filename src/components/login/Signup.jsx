@@ -8,14 +8,6 @@ import {useHistory} from "react-router-dom";
 
 const Signup = () => {
     const history = useHistory();
-    /* const success = () => {
-        message.success('Account created successfully!', 4, () => {
-            history.push('/login')
-        })
-    };
-    const fail = () => {
-        message.error('Username already in used!')
-    }; */
     const validate = Yup.object({
         fullname: Yup.string()
             .min(6, "Mininum 2 characters")
@@ -64,12 +56,13 @@ const Signup = () => {
                     }
                 ).then(response => {
                     if (response.status === 200) {
-                        console.log('success');
+                        message.success("Tạo tài khoản thành công :D");
                     }
                 })
                     .catch(e => {
+                        message.error('Đăng ký không thành công =))')
                         if (e.response && e.response.data) {
-                            console.log('error');
+                            message.error('Đăng ký không thành công =))')
                         }
                     });
             })}

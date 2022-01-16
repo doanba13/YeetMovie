@@ -56,15 +56,13 @@ const UserManager = () => {
         getData();
     }, [])
 
-    console.log(userData)
-
     const newData = userData.content?.map((item) => ({
         createDate: new Date(item.createDate).toLocaleDateString("en-US"),
         updateDate: new Date(item.updateDate).toLocaleDateString("en-US"),
         username: <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <p style={{marginRight: '1rem', marginBottom: '0'}}>{item.username}</p>
             <Avatar
-                src={item.avatar ? `http://54.169.180.127/movie${item.avatar}` : "https://joeschmoe.io/api/v1/random"}/>
+                src={item.avatar ? `http://54.169.180.127${item.avatar}` : "https://joeschmoe.io/api/v1/random"}/>
         </div>,
         fullName: item.fullName,
         email: item.email,
