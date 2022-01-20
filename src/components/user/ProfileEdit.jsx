@@ -118,9 +118,9 @@ const ProfileEdit = () => {
                     </div>
                 )}
             </Formik>
-            <div className='form-control1'>
-                <input className='form-control1__input' type="file" onChange={onFileChange}/>
-                <button style={{width: '50%', marginTop: '.5rem'}} className='btn'
+            <div className='form-control1' style={{display: 'flex'}}>
+                <input style={{width: '50%'}} className='form-control1__input' type="file" onChange={onFileChange}/>
+                <button style={{width: '25%', marginTop: '.5rem'}} className='btn'
                         onClick={() => onFileUpload(authCtx.userData.id)}>
                     Upload
                 </button>

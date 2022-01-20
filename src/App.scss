@@ -73,8 +73,14 @@ iframe {
 
 .section {
   padding: 0 2rem;
+
+
 }
 
 .section__header {
   @include flex(center, space-between);
+
+  & h2 {
+    color: #fff;
+  }
 }

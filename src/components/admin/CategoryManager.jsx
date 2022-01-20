@@ -59,7 +59,7 @@ const CategoryManager = () => {
 
     const validate = Yup.object({
         category: Yup.string()
-            .min(6, "Mininum 2 characters")
+            .min(3, "Mininum 2 characters")
             .required("Required!"),
     });
     const validateSearch = Yup.object({
