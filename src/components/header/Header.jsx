@@ -47,7 +47,7 @@ const Header = () => {
             <div className="header__wrap container">
                 <div className="logo">
                     <img src={logo} alt=""/>
-                    <Link to='/'>NotFlush</Link>
+                    <Link to='/'>notFlush</Link>
                 </div>
                 <ul className="header__nav">
                     {
