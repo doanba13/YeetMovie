@@ -7,16 +7,17 @@ import {SwiperSlide, Swiper} from "swiper/react";
 
 import MovieCard from "../movie-card/MovieCard";
 import {message} from "antd";
-import axiosInstance from "../../api/axiosInstance";
+import axiosConfig from "../../api/axiosConfig";
 
 const MovieList = props => {
     const [items, setItems] = useState([]);
     useEffect(() => {
-        axiosInstance.get(`/api/basic/movie?typeId=${props.typeId}&categoryId=&order=&search=&order=`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${props.typeId}&categoryId=&order=&search=&order=`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data);
             }
         }).catch(err => {
+            console.log(err)
             message.error("Error while getting movie data :'(");
         })
     }, []);
