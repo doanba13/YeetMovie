@@ -1,78 +1,119 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {useHistory, useParams} from 'react-router';
-
 import './movie-grid.scss';
-
 import MovieCard from '../movie-card/MovieCard';
 import Button, {OutlineButton} from '../button/Button';
+import axiosInstance from "../../api/axiosInstance";
+import {message} from "antd";
 
-import tmdbApi, {category, movieType, tvType} from '../../api/tmdbConfig';
-
-const MovieGrid = props => {
+const MovieGrid = () => {
 
     const [items, setItems] = useState([]);
-
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
-
-    const {keyword} = useParams();
+    const [categoryData, setCategoryData] = useState([]);
+    const [typeData, setTypeData] = useState([]);
+    const [params, setParams] = useState({
+        typeId: '',
+        categoryId: '',
+        order: '',
+        search: '',
+    });
 
     useEffect(() => {
-        const getList = async () => {
-            let response = null;
-            if (keyword === undefined) {
-                const params = {};
-                switch (props.category) {
-                    case category.movie:
-                        response = await tmdbApi.getMoviesList(movieType.upcoming, {params});
-                        break;
-                    default:
-                        response = await tmdbApi.getTvList(tvType.popular, {params});
-                }
-            } else {
-                const params = {
-                    query: keyword
-                }
-                response = await tmdbApi.search(props.category, {params});
+        axiosInstance.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
+            if (res.status === 200) {
+                setItems(res.data.data.content);
+                setTotalPage(res.data.data.totalPages);
             }
-            setItems(response.results);
-            setTotalPage(response.total_pages);
-        }
-        getList();
-    }, [props.category, keyword]);
+        }).catch(err => {
+            message.error("Error while getting movie data :'(");
+        })
+        axiosInstance.get(`/api/basic/category?search=&order=desc`).then(res => {
+            setCategoryData(res.data);
+        }).catch(err => {
+            message.error("Error while getting category data :'(");
+        })
+        axiosInstance.get(`/api/basic/type?search=&order=desc`).then(res => {
+            setTypeData(res.data);
+
+        }).catch(err => {
+            message.error("Error while getting type data :'(");
+        })
+    }, [])
 
     const loadMore = async () => {
-        let response = null;
-        if (keyword === undefined) {
-            const params = {
-                page: page + 1
-            };
-            switch (props.category) {
-                case category.movie:
-                    response = await tmdbApi.getMoviesList(movieType.upcoming, {params});
-                    break;
-                default:
-                    response = await tmdbApi.getTvList(tvType.popular, {params});
+        axiosInstance.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}`).then(res => {
+            if (res.status === 200) {
+                setItems([...items, ...res.data.data.content]);
             }
-        } else {
-            const params = {
-                page: page + 1,
-                query: keyword
-            }
-            response = await tmdbApi.search(props.category, {params});
-        }
-        setItems([...items, ...response.results]);
+        }).catch(err => {
+            message.error("Error while getting movie data :'(");
+        })
+
         setPage(page + 1);
     }
+    const goToSearch = () => {
+        axiosInstance.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
+            if (res.status === 200) {
+                setItems(res.data.data.content);
+                setTotalPage(res.data.data.totalPages);
+            }
+        }).catch(err => {
+            message.error("Error while getting movie data :'(");
+        })
+    };
 
     return (
         <>
             <div className="section mb-3">
-                <MovieSearch category={props.category} keyword={keyword}/>
+                <div className="movie-search" style={{display: 'flex'}}>
+                    <input className='input' type='text' placeholder="Enter keyword" value={params.search}
+                           onChange={(e) => setParams(prevState => ({
+                               ...prevState,
+                               search: e.target.value
+                           }))}/>
+
+                    <select type='select' name='typeId' className='form-control1__input'
+                            onChange={(e) => setParams(prevState => ({
+                                ...prevState,
+                                typeId: e.target.value
+                            }))}
+                    >
+                        {
+                            typeData?.data && typeData?.data.map((item) =>
+                                <option value={item.id}>{item.name}</option>
+                            )
+                        }
+                    </select>
+                    <select type='select' name='categoryId' className='form-control1__input'
+                            onChange={(e) => setParams(prevState => ({
+                                ...prevState,
+                                categoryId: e.target.value
+                            }))}
+                    >
+                        {
+                            categoryData?.data && categoryData?.data.map((item) =>
+                                <option value={item.id}>{item.name}</option>
+                            )
+                        }
+                    </select>
+                    <select type='select' name='order' className='form-control1__input'
+                            onChange={(e) => setParams(prevState => ({
+                                ...prevState,
+                                order: e.target.value
+                            }))}
+                    >
+                        <option value='desc'>Descend</option>
+                        <option value='insc'>Increase</option>
+                    </select>
+
+                    <Button style={{marginLeft: '3rem'}} className="small" onClick={goToSearch}>Search</Button>
+                </div>
             </div>
             <div className="movie-grid">
                 {
-                    items.map((item, i) => <MovieCard category={props.category} item={item} key={i}/>)
+                    items.map((item) => <MovieCard item={item} key={item.id}/>)
                 }
             </div>
             {
@@ -86,7 +127,7 @@ const MovieGrid = props => {
     );
 }
 
-const MovieSearch = props => {
+/* const MovieSearch = props => {
 
     const history = useHistory();
 
@@ -121,6 +162,6 @@ const MovieSearch = props => {
             <Button style={{marginLeft: '3rem'}} className="small" onClick={goToSearch}>Search</Button>
         </div>
     )
-}
+} */
 
 export default MovieGrid;

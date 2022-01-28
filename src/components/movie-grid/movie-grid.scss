@@ -18,10 +18,10 @@
 .movie-search {
   position: relative;
   width: 100%;
-  max-width: 800px;
+  //max-width: 800px;
 
   input {
-    width: 70%;
+    width: 30%;
     padding-right: 8rem;
 
     @include mobile {
@@ -30,6 +30,12 @@
     @include tablet {
       height: 50px;
     }
+  }
+
+  select {
+    margin-left: 1rem;
+    border-radius: 300px;
+    background-color: $body-bg;
   }
 
   button {
