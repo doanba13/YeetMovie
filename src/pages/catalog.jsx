@@ -9,11 +9,11 @@ const Catalog = () => {
     return (
         <>
             <PageHeader>
-                {category === cate.movie ? 'Movies' : 'TV Series'}
+                {category === 'movies' ? 'Movies' : 'TV Series'}
             </PageHeader>
             <div className="container">
                 <div className="section mb-3">
-                    <MovieGrid category={category}/>
+                    <MovieGrid/>
                 </div>
             </div>
         </>

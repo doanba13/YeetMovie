@@ -6,25 +6,18 @@ import {Link} from 'react-router-dom';
 
 import Button from '../button/Button';
 
-import {category} from '../../api/tmdbConfig';
-import apiConfig from '../../api/apiConfig';
-
 const MovieCard = props => {
 
-    const item = props.item;
-
-    const link = '/' + category[props.category] + '/' + item.id;
-
-    const bg = apiConfig.w500Image(item.poster_path || item.backdrop_path);
+    const link = '/movie';
 
     return (
         <Link to={link}>
-            <div className="movie-card" style={{backgroundImage: `url(${bg})`}}>
+            <div className="movie-card" style={{backgroundImage: `url(http://54.169.180.127${props.item.avatar})`}}>
                 <Button>
                     <i className="bx bx-play"></i>
                 </Button>
             </div>
-            <h3 className="movie-card__title">{item.title || item.name}</h3>
+            <h3 className="movie-card__title">{props.item.title}</h3>
         </Link>
     );
 }

@@ -10,6 +10,7 @@ const MovieManager = () => {
     const [movieData, setMovieData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [typeData, setTypeData] = useState([]);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         axiosInstance.get(`/api/basic/category?search=&order=desc`).then(res => {
@@ -50,12 +51,14 @@ const MovieManager = () => {
         setImg(event.target.files[0]);
     };
     const onFileUpload = (id) => {
-
+        console.log(id)
         const formData = new FormData();
         formData.append(
             "image",
             img
         );
+        console.log(formData)
+        console.log(img)
         axiosInstance.patch(`/api/movie/${id}/movie-image`, formData, {
             'Content-Type': 'multipart/form-data'
         }).then(res => {
@@ -67,6 +70,7 @@ const MovieManager = () => {
             message.success('Thumbnail upload failed ;(')
         })
     };
+    console.log(movieData)
 
     const addMovieThumbnail = (id) => {
             Modal.confirm({
@@ -98,7 +102,7 @@ const MovieManager = () => {
             align: 'center'
         },
         {
-            title: 'Avatar',
+            title: 'Poster',
             dataIndex: 'avatar',
             key: 'avatar',
             align: 'center',
@@ -311,7 +315,21 @@ const MovieManager = () => {
                     )}
                 </Formik>
                 {movieData && <Table rowKey={(record) => record.id} dataSource={movieData.content} columns={columns}
-                                     pagination={false}/>}
+                                     pagination={
+                                         {
+                                             current: page,
+                                             pageSize: 10,
+                                             total: movieData.totalElements,
+                                             onChange: (current) => {
+                                                 setPage(current);
+                                                 axiosInstance.get(`/api/basic/movie?typeId=&categoryId=&order=&search=&order=&page=${current - 1}`).then(res => {
+                                                     setMovieData(res.data.data);
+                                                 }).catch(err => {
+                                                     message.error("Error while getting type data :'(");
+                                                 })
+                                             },
+                                         }
+                                     }/>}
             </Card>
         </>
     );

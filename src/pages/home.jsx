@@ -16,7 +16,7 @@ const Home = () => {
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList category={category.movie} type={movieType.popular}/>
+                    <MovieList typeId={10}/>
                 </div>
                 <div className="section mb-3">
                     <div className="section__header mb-2">
@@ -25,7 +25,7 @@ const Home = () => {
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList category={category.movie} type={movieType.top_rated}/>
+                    <MovieList typeId={10}/>
                 </div>
                 <div className="section mb-3">
                     <div className="section__header mb-2">
@@ -34,7 +34,7 @@ const Home = () => {
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList category={category.tv} type={tvType.popular}/>
+                    <MovieList typeId={11}/>
                 </div>
                 <div className="section mb-3">
                     <div className="section__header mb-2">
@@ -43,7 +43,7 @@ const Home = () => {
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList category={category.tv} type={tvType.top_rated}/>
+                    <MovieList typeId={9}/>
                 </div>
             </div>
         </>
