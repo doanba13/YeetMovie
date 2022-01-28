@@ -238,7 +238,7 @@ const MovieManager = () => {
            }}
                     validationSchema={validateImg}
                     onSubmit={(value) => {
-                        axiosInstance.get(`/api/basic/category?search=${value.search}&order=${value.order}`).then(res => {
+                        axiosConfig.get(`/api/basic/category?search=${value.search}&order=${value.order}`).then(res => {
                             setCategoryData(res.data);
                         }).catch(err => {
                             message.error("Error while getting type data :'(");

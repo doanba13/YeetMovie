@@ -3,7 +3,7 @@ import {useHistory, useParams} from 'react-router';
 import './movie-grid.scss';
 import MovieCard from '../movie-card/MovieCard';
 import Button, {OutlineButton} from '../button/Button';
-import axiosInstance from "../../api/axiosInstance";
+import axiosConfig from "../../api/axiosConfig";
 import {message} from "antd";
 
 const MovieGrid = () => {
@@ -21,7 +21,7 @@ const MovieGrid = () => {
     });
 
     useEffect(() => {
-        axiosInstance.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data.content);
                 setTotalPage(res.data.data.totalPages);
@@ -29,12 +29,12 @@ const MovieGrid = () => {
         }).catch(err => {
             message.error("Error while getting movie data :'(");
         })
-        axiosInstance.get(`/api/basic/category?search=&order=desc`).then(res => {
+        axiosConfig.get(`/api/basic/category?search=&order=desc`).then(res => {
             setCategoryData(res.data);
         }).catch(err => {
             message.error("Error while getting category data :'(");
         })
-        axiosInstance.get(`/api/basic/type?search=&order=desc`).then(res => {
+        axiosConfig.get(`/api/basic/type?search=&order=desc`).then(res => {
             setTypeData(res.data);
 
         }).catch(err => {
@@ -43,7 +43,7 @@ const MovieGrid = () => {
     }, [])
 
     const loadMore = async () => {
-        axiosInstance.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}`).then(res => {
             if (res.status === 200) {
                 setItems([...items, ...res.data.data.content]);
             }
@@ -54,7 +54,7 @@ const MovieGrid = () => {
         setPage(page + 1);
     }
     const goToSearch = () => {
-        axiosInstance.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data.content);
                 setTotalPage(res.data.data.totalPages);
