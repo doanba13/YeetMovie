@@ -2,7 +2,6 @@ import Hero from "../components/hero/Hero";
 import {Link} from "react-router-dom";
 import {SmallOutlineButton} from "../components/button/Button";
 import MovieList from "../components/movie-list/MovieList";
-import {category, movieType, tvType} from "../api/tmdbConfig";
 
 const Home = () => {
     return (
