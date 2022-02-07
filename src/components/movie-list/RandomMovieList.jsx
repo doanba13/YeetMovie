@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import PropTypes from "prop-types";
 
 import './movieList.scss';
 
@@ -9,10 +8,10 @@ import MovieCard from "../movie-card/MovieCard";
 import {message} from "antd";
 import axiosConfig from "../../api/axiosConfig";
 
-const MovieList = props => {
+const RandomMovieList = props => {
     const [items, setItems] = useState([]);
     useEffect(() => {
-        axiosConfig.get(`/api/basic/movie?typeId=${props.typeId}&categoryId=&order=&search=&order=`).then(res => {
+        axiosConfig.get(`/api/basic/movie/random?categoryId=${props.id}`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data);
             }
@@ -27,7 +26,7 @@ const MovieList = props => {
     return (
         <div className='movies-list'>
             <Swiper grabCursor={true} spaceBetween={10} slidesPerView={'auto'}>
-                {items && items.content?.map((item) => (
+                {items && items.map((item) => (
                     <SwiperSlide key={item.id}>
                         <MovieCard item={item}/>
                     </SwiperSlide>
@@ -37,8 +36,4 @@ const MovieList = props => {
     );
 };
 
-MovieList.propsTypes = {
-    typeId: PropTypes.string.isRequired,
-}
-
-export default MovieList;
+export default RandomMovieList;
