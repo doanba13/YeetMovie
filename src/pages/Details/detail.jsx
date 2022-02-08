@@ -7,6 +7,8 @@ import axiosConfig from "../../api/axiosConfig";
 import {message} from "antd";
 import RandomMovieList from "../../components/movie-list/RandomMovieList";
 import MovieRate from "../../components/rate/MovieRate";
+import CommentSection from "../../components/comment/CommentSection";
+import Heart from "../../components/button/Heart";
 
 const Detail = () => {
 
@@ -42,11 +44,14 @@ const Detail = () => {
                             <div className="movie-content__info">
                                 <h1 style={{color: '#fff'}} className="title">
                                     {item.title}
+                                    <Heart/>
                                 </h1>
+
                                 <div className="genres">
                                     <span className="genres__item">{item.category.name}</span>
                                 </div>
                                 <MovieRate id={item.id} rate={item.averageRating}/>
+
                                 <p className="overview">{item.description}</p>
                             </div>
                         </div>
@@ -66,10 +71,17 @@ const Detail = () => {
                             </div>
                             <div className="section mb-3">
                                 <div className="section__header mb-2">
+                                    <h2>Comments</h2>
+                                </div>
+                                <CommentSection/>
+                            </div>
+                            <div className="section mb-3">
+                                <div className="section__header mb-2">
                                     <h2>Similar</h2>
                                 </div>
                                 <RandomMovieList id={item.category.id}/>
                             </div>
+
                         </div>
                     </>
                 )
