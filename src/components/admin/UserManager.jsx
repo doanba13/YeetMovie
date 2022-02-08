@@ -45,15 +45,11 @@ const UserManager = () => {
     const [userData, setUserData] = useState([]);
 
     useEffect(() => {
-        const getData = async () => {
-            const res = await axiosInstance.get('/api/user/get-all');
+        axiosInstance.get('/api/user/get-all').then(res => {
             if (res.status === 200) {
                 setUserData(res.data.data)
-            } else if (res.status === 403) {
-                console.log('unauthorized?')
             }
-        };
-        getData();
+        }).catch(err => console.log(err))
     }, [])
 
     const newData = userData.content?.map((item) => ({

@@ -2,9 +2,8 @@ import {useContext, useEffect, useRef} from "react";
 import './header.scss';
 import {useLocation, Link, useHistory} from "react-router-dom";
 import logo from '../../assets/ylogo.png';
-import AuthContext from "../../store/AuthContext";
-import userImg from '../../assets/userlogo.png';
 import authContext from "../../store/AuthContext";
+import {Avatar} from "antd";
 
 const headerNav = [
     {
@@ -59,29 +58,24 @@ const Header = () => {
                             </li>
                         ))
                     }
-                    {authCtx.user && <li className={active ? 'active' : ''}>
+                    {authCtx.user && <li>
                         <a onClick={authCtx.logoutUser}>
                             Logout
                         </a>
                     </li>}
-                    {!authCtx.user && <li className={active ? 'active' : ''}>
+                    {!authCtx.user && <li>
                         <Link to={'/login'}>
                             Login
                         </Link>
                     </li>}
                     {authCtx.user &&
-                        <li className={active ? 'active' : ''}
-                            onClick={() => authCtx.user === 'admin' ? history.push('/admin') : history.push('/user')}>
+                        <li
+                            onClick={() => authCtx.userData.username === 'admin' ? history.push('/admin') : history.push('/user')}>
                             <div className='user'>
                                 <div className='user__logo'>
-                                    <img src={userImg}
-                                         style={{
-                                             width: '50px',
-                                             height: '50px',
-                                             objectFit: 'cover',
-                                             borderRadius: '50%',
-                                             border: '1px solid #fff'
-                                         }}/>
+                                    <Avatar size='large'
+                                            src={authCtx.userData?.avatar ? `http://54.169.180.127${authCtx.userData?.avatar}` : 'https://joeschmoe.io/api/v1/random'}
+                                            alt="Han Solo"/>
                                 </div>
                             </div>
                         </li>}
