@@ -64,9 +64,7 @@ const Detail = () => {
                             <div className="movie-content__info">
                                 <h1 style={{color: '#fff'}} className="title">
                                     {item.title}
-                                    <Heart/>
                                 </h1>
-
                                 <div className="genres">
                                     <span className="genres__item">{item.category.name}</span>
                                 </div>
@@ -88,7 +86,7 @@ const Detail = () => {
                                             modal.classList.toggle('active');
                                         }
                                         }>Watch now</Button>
-                                        <OpenPlayer item={item.episodes[0]}/>
+                                        <OpenPlayer title={item.title} item={item.episodes[0]}/>
                                     </>
                                     : <div className="section mb-3">
                                         <div className="video">
@@ -99,7 +97,7 @@ const Detail = () => {
                                                 {item.episodes.map((eps => <>
                                                     <SmallButton onClick={() => setModalActive(eps)}
                                                                  key={eps.id}>{eps.name}</SmallButton>
-                                                    <OpenPlayer item={eps}/>
+                                                    <OpenPlayer title={item.title} item={eps}/>
                                                 </>))}
                                             </div>
                                         </div>
@@ -142,14 +140,27 @@ const Detail = () => {
 
 const OpenPlayer = (props) => {
     const item = props.item;
-
+    const [eps, setEps] = useState();
     const iframeRef = useRef(null);
+
+    useEffect(() => {
+        axiosConfig.get(`/api/basic/episode/${item.id}`).then(res => {
+            setEps(res.data.data)
+        }).catch(err => {
+            message.error('Something went wrong!')
+        })
+    }, [])
 
     const onClose = () => iframeRef.current.setAttribute('src', '');
 
     return (
         <Modal active={false} id={`modal_${item.id}`}>
             <ModalContent onClose={onClose}>
+                <div
+                    style={{display: 'flex', justifyContent: 'space-between', padding: '0 2rem', marginBottom: '1rem'}}>
+                    <h1 style={{color: '#fff'}}>{props.title} - {item.name}</h1>
+                    <Heart eps={eps} id={item.id}/>
+                </div>
                 <iframe allowFullScreen={true} ref={iframeRef} content='trailer' width='100%' height='500px'
                         style={{borderRadius: '5px'}}/>
             </ModalContent>
