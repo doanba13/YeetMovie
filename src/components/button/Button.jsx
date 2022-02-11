@@ -9,6 +9,14 @@ const Button = (props) => {
     )
 };
 
+export const SmallButton = (props) => {
+    return (
+        <button className={`btn-small ${props.className}`} onClick={props.onClick ? props.onClick : null}>
+            {props.children}
+        </button>
+    )
+};
+
 export const OutlineButton = (props) => {
     return (
         <button className={`btn-outline ${props.className}`} onClick={props.onClick ? props.onClick : null}>

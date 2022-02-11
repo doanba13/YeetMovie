@@ -82,7 +82,7 @@ const MovieGrid = () => {
                     >
                         {
                             typeData?.data && typeData?.data.map((item) =>
-                                <option value={item.id}>{item.name}</option>
+                                <option key={item.id} value={item.id}>{item.name}</option>
                             )
                         }
                     </select>
@@ -94,7 +94,7 @@ const MovieGrid = () => {
                     >
                         {
                             categoryData?.data && categoryData?.data.map((item) =>
-                                <option value={item.id}>{item.name}</option>
+                                <option key={item.id} value={item.id}>{item.name}</option>
                             )
                         }
                     </select>

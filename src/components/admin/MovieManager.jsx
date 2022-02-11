@@ -250,7 +250,7 @@ const MovieManager = () => {
                                 onChange={formik.handleChange}>
                        {
                            typeData?.data && typeData?.data.map((item) =>
-                               <option value={item.id}>{item.name}</option>
+                               <option key={item.id} value={item.id}>{item.name}</option>
                            )
                        }
                         </select>
@@ -266,7 +266,7 @@ const MovieManager = () => {
                                 onChange={formik.handleChange}>
                        {
                            categoryData?.data && categoryData?.data.map((item) =>
-                               <option value={item.id}>{item.name}</option>
+                               <option key={item.id} value={item.id}>{item.name}</option>
                            )
                        }
                         </select>

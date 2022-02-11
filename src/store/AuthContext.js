@@ -20,7 +20,7 @@ export const AuthProvider = ({children}) => {
     const [authTokens, setAuthTokens] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null)
     const [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null)
     const [loading, setLoading] = useState(true)
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState(localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')) : null);
 
     const history = useHistory()
 
@@ -28,17 +28,17 @@ export const AuthProvider = ({children}) => {
     let loginUser = async (data) => {
         const accessToken = data.accessToken;
         try {
-
             const token = jwt_decode(accessToken);
             console.log(JSON.stringify(data))
             setUser(token.sub);
             localStorage.setItem('authTokens', JSON.stringify(data))
             axiosInstance.get('/api/user').then(res => {
                 setUserData(res.data.data)
-                console.log(res.data.data)
+                localStorage.setItem('userData', JSON.stringify(res.data.data))
             }).catch(err => {
                 console.log(err)
             })
+
             history.replace('/');
         } catch (error) {
             console.log(error)
@@ -50,6 +50,7 @@ export const AuthProvider = ({children}) => {
         setUser(null)
         setUserData(null)
         localStorage.removeItem('authTokens')
+        localStorage.removeItem('userData')
         history.replace('/login')
         window.location.reload(false)
     }
