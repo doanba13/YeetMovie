@@ -1,6 +1,7 @@
-import {Comment, Avatar, Input, Button, Form} from "antd";
+import {Comment, Avatar, Input, Button, Form, message} from "antd";
 import {useContext, useState} from "react";
 import AuthContext from "../../store/AuthContext";
+import axiosInstance from "../../api/axiosInstance";
 
 const {TextArea} = Input;
 
@@ -17,10 +18,10 @@ const Editor = ({onChange, onSubmit, submitting, value}) => (
     </>
 );
 
-const CommentSection = () => {
+const CommentSection = (props) => {
     const [value, setValue] = useState('');
     const [submitting, setSubmitting] = useState(false);
-
+    const [commented, setCommented] = useState(false);
     const authCtx = useContext(AuthContext);
 
     const handleSubmit = () => {
@@ -28,7 +29,22 @@ const CommentSection = () => {
             return;
         }
         setSubmitting(true);
-        console.log(value);
+        axiosInstance.post('/api/comment', {
+            content: value,
+            parentId: 1,
+            episodeId: props.id
+        }).then(res => {
+            if (res.status === 200) {
+                message.success('Commented!')
+            }
+            setSubmitting(false)
+            setCommented(!commented)
+            props.commented(commented);
+        }).catch(err => {
+            console.log(err)
+            message.error('Something went wrong!')
+            setSubmitting(false)
+        })
     };
 
     const handleChange = e => {
