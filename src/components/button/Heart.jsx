@@ -1,17 +1,23 @@
 import './heart.scss'
 import axiosInstance from "../../api/axiosInstance";
 import {message} from "antd";
+import {useContext} from "react";
+import authContext from "../../store/AuthContext";
 
 const Heart = (props) => {
-
+    const authCtx = useContext(authContext)
     const likeHandler = () => {
-        axiosInstance.post(`/api/like/episode/${props.id}`).then(res => {
-            if (res.status === 200) {
-                message.success('Episode has been added to library')
-            }
-        }).catch(err => {
-            message.error('Some thing went wrong!')
-        })
+        if (authCtx.user) {
+            axiosInstance.post(`/api/like/episode/${props.id}`).then(res => {
+                if (res.status === 200) {
+                    message.success('Episode has been added to library')
+                }
+            }).catch(err => {
+                message.error('Some thing went wrong!')
+            })
+        } else {
+            message.warn("You need to log in to like this episode :D")
+        }
     }
 
     return (

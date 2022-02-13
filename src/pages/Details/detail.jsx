@@ -4,7 +4,7 @@ import background from '../../assets/detailBg.jpeg'
 import './detail.scss';
 
 import axiosConfig from "../../api/axiosConfig";
-import {message} from "antd";
+import {message, Comment, List} from "antd";
 import RandomMovieList from "../../components/movie-list/RandomMovieList";
 import MovieRate from "../../components/rate/MovieRate";
 import CommentSection from "../../components/comment/CommentSection";
@@ -13,12 +13,14 @@ import Button, {SmallButton} from "../../components/button/Button";
 import Modal, {ModalContent} from "../../components/modal/Modal";
 import axiosInstance from "../../api/axiosInstance";
 import authContext from "../../store/AuthContext";
+import {EyeFilled, HeartFilled} from '@ant-design/icons'
 
 const Detail = () => {
 
     const {id} = useParams();
 
     const [item, setItem] = useState(null);
+    const [cmt, setCmt] = useState([]);
     const authCtx = useContext(authContext);
 
     useEffect(() => {
@@ -49,6 +51,27 @@ const Detail = () => {
         modal.classList.toggle('active');
     };
 
+    const addCmt = (data) => {
+        data?.map((item) => {
+            if (!cmt.includes(item)) {
+                setCmt(prevState => [...prevState, item])
+            }
+        })
+    }
+    const cmtData = cmt?.map(item => ({
+        author: (
+            <p style={{color: '#fff'}}>
+                {item.user.username}
+            </p>
+        ),
+        avatar: item.user.avatar ? `http://54.169.180.127${item.user.avatar}` : 'https://joeschmoe.io/api/v1/random',
+        content: (
+            <p style={{color: '#fff'}}>
+                {item.content}
+            </p>
+        ),
+        datetime: new Date(item.createDate).toLocaleDateString("en-US")
+    }))
     return (
         <>
             {
@@ -86,7 +109,7 @@ const Detail = () => {
                                             modal.classList.toggle('active');
                                         }
                                         }>Watch now</Button>
-                                        <OpenPlayer title={item.title} item={item.episodes[0]}/>
+                                        <OpenPlayer handlerCmt={addCmt} title={item.title} item={item.episodes[0]}/>
                                     </>
                                     : <div className="section mb-3">
                                         <div className="video">
@@ -97,7 +120,7 @@ const Detail = () => {
                                                 {item.episodes.map((eps => <>
                                                     <SmallButton onClick={() => setModalActive(eps)}
                                                                  key={eps.id}>{eps.name}</SmallButton>
-                                                    <OpenPlayer title={item.title} item={eps}/>
+                                                    <OpenPlayer handlerCmt={addCmt} title={item.title} item={eps}/>
                                                 </>))}
                                             </div>
                                         </div>
@@ -122,7 +145,22 @@ const Detail = () => {
                                 <div className="section__header mb-2">
                                     <h2>Comments</h2>
                                 </div>
-                                <CommentSection/>
+                                {cmt && <List
+                                    className="comment-list"
+                                    itemLayout="horizontal"
+                                    dataSource={cmtData}
+                                    renderItem={item => (
+                                        <li>
+                                            <Comment
+                                                actions={item.actions}
+                                                author={item.author}
+                                                avatar={item.avatar}
+                                                content={item.content}
+                                                datetime={item.datetime}
+                                            />
+                                        </li>
+                                    )}
+                                />}
                             </div>
                             <div className="section mb-3">
                                 <div className="section__header mb-2">
@@ -142,6 +180,7 @@ const OpenPlayer = (props) => {
     const item = props.item;
     const [eps, setEps] = useState();
     const iframeRef = useRef(null);
+    const [isCmt, setIsCmt] = useState(false);
 
     useEffect(() => {
         axiosConfig.get(`/api/basic/episode/${item.id}`).then(res => {
@@ -149,7 +188,17 @@ const OpenPlayer = (props) => {
         }).catch(err => {
             message.error('Something went wrong!')
         })
-    }, [])
+    }, [isCmt])
+
+    useEffect(() => {
+        if (eps) {
+            props.handlerCmt(eps.comments)
+        }
+    }, [eps])
+
+    const isCommented = (isCmt) => {
+        setIsCmt(isCmt);
+    }
 
     const onClose = () => iframeRef.current.setAttribute('src', '');
 
@@ -161,8 +210,13 @@ const OpenPlayer = (props) => {
                     <h1 style={{color: '#fff'}}>{props.title} - {item.name}</h1>
                     <Heart eps={eps} id={item.id}/>
                 </div>
+                <div style={{display: 'flex', padding: '0 2rem 1rem 2rem'}}>
+                    <p style={{padding: '0 .5rem'}}>{eps?.numberView}<EyeFilled/></p>
+                    <p style={{padding: '0 .5rem'}}>{eps?.totalLike}<HeartFilled/></p>
+                </div>
                 <iframe allowFullScreen={true} ref={iframeRef} content='trailer' width='100%' height='500px'
                         style={{borderRadius: '5px'}}/>
+                <CommentSection commented={isCommented} id={item.id}/>
             </ModalContent>
         </Modal>
     );
