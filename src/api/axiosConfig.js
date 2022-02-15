@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = 'https://54.169.180.127/movie';
+const baseURL = 'https://anhcuong.org/movie';
 const axiosConfig = axios.create({
     baseURL
 });
