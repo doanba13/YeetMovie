@@ -2,7 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
 
-const baseURL = 'https://anhcuong.org/movie'
+const baseURL = 'https://54.169.180.127/movie'
 
 let authTokens = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
 

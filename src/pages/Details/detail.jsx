@@ -211,7 +211,7 @@ const OpenPlayer = (props) => {
                     <p style={{padding: '0 .5rem'}}>{eps?.numberView}<EyeFilled/></p>
                     <p style={{padding: '0 .5rem'}}>{eps?.totalLike}<HeartFilled/></p>
                 </div>
-                <iframe allowFullScreen={true} ref={iframeRef} content='trailer' width='100%' height='500px'
+                <iframe allowFullScreen={true} ref={iframeRef} content='trailer' width='100%' height='400px'
                         style={{borderRadius: '5px'}}/>
                 <CommentSection commented={isCommented} id={item.id}/>
             </ModalContent>
