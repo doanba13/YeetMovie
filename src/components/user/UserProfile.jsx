@@ -5,6 +5,7 @@ import '../admin/adminPanel.scss';
 
 import ProfileEdit from "./ProfileEdit";
 import MovieHistory from "./MovieHistory";
+import LikedMovie from "./LikedMovie";
 
 const UserProfile = () => {
     let {path, url} = useRouteMatch();
@@ -18,10 +19,10 @@ const UserProfile = () => {
                             <Link to={`${url}/profile`}>Profile</Link>
                         </li>
                         <li className='sidebar__link'>
-                            <Link to={`${url}/history`}>History</Link>
+                            <Link to={`${url}/liked-movies`}>Liked Movies</Link>
                         </li>
                         <li className='sidebar__link'>
-                            <Link to={`${url}/liked-movies`}>Liked Movies</Link>
+                            <Link to={`${url}/history`}>History</Link>
                         </li>
                         <li onClick={authCtx.logoutUser} className='sidebar__link'>
                             <a style={{color: '#ff0000', cursor: 'pointer'}}>Log Out</a>
@@ -33,6 +34,7 @@ const UserProfile = () => {
                 <Switch>
                     <Route exact path={path} component={ProfileEdit}/>
                     <Route exact path={`${path}/profile`} component={ProfileEdit}/>
+                    <Route exact path={`${path}/liked-movies`} component={LikedMovie}/>
                     <Route exact path={`${path}/history`} component={MovieHistory}/>
                 </Switch>
             </div>

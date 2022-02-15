@@ -8,7 +8,7 @@ import Button from '../button/Button';
 
 const MovieCard = props => {
 
-    const link = `/movie/${props.item.id}`
+    const link = `/movies/${props.item.id}`
     return (
         <Link to={link}>
             <div className="movie-card" style={{backgroundImage: `url(http://54.169.180.127${props.item.avatar})`}}>
