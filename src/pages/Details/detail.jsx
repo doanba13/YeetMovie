@@ -38,8 +38,6 @@ const Detail = () => {
     const setModalActive = (eps) => {
         axiosConfig.post(`/api/basic/episode/${eps.id}`).catch(err => console.log(err));
         if (authCtx.user) {
-            console.log(authCtx.userData)
-            console.log(authCtx.user)
             axiosInstance.patch(`/api/user/user-history`, {
                 movieName: item.title,
                 episodeName: eps.name,
@@ -51,27 +49,26 @@ const Detail = () => {
         modal.classList.toggle('active');
     };
 
-    const addCmt = (data) => {
-        data?.map((item) => {
+    const addCmt = (cmtData, epsNname) => {
+        cmtData?.map((item) => {
             if (!cmt.includes(item)) {
-                setCmt(prevState => [...prevState, item])
+                setCmt(prevState => [...prevState, {
+                    author: (
+                        <p style={{color: '#fff'}}>
+                            {item.user.username} commented in {epsNname}
+                        </p>
+                    ),
+                    avatar: item.user.avatar ? `http://54.169.180.127${item.user.avatar}` : 'https://joeschmoe.io/api/v1/random',
+                    content: (
+                        <p style={{color: '#fff'}}>
+                            {item.content}
+                        </p>
+                    ),
+                    datetime: new Date(item.createDate).toLocaleDateString("en-US")
+                }])
             }
         })
     }
-    const cmtData = cmt?.map(item => ({
-        author: (
-            <p style={{color: '#fff'}}>
-                {item.user.username}
-            </p>
-        ),
-        avatar: item.user.avatar ? `http://54.169.180.127${item.user.avatar}` : 'https://joeschmoe.io/api/v1/random',
-        content: (
-            <p style={{color: '#fff'}}>
-                {item.content}
-            </p>
-        ),
-        datetime: new Date(item.createDate).toLocaleDateString("en-US")
-    }))
     return (
         <>
             {
@@ -148,7 +145,7 @@ const Detail = () => {
                                 {cmt && <List
                                     className="comment-list"
                                     itemLayout="horizontal"
-                                    dataSource={cmtData}
+                                    dataSource={cmt}
                                     renderItem={item => (
                                         <li>
                                             <Comment
@@ -192,7 +189,7 @@ const OpenPlayer = (props) => {
 
     useEffect(() => {
         if (eps) {
-            props.handlerCmt(eps.comments)
+            props.handlerCmt(eps.comments, item.name)
         }
     }, [eps])
 
