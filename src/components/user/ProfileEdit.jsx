@@ -45,7 +45,7 @@ const ProfileEdit = () => {
     };
 
     return (
-        <Card title={`${authCtx.user}'s Profile`}
+        <Card title={`${authCtx.userData.username}'s Profile`}
               style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}} headStyle={{color: '#fff'}}>
             <Formik initialValues={{
                 fullName: authCtx.userData.fullName,
