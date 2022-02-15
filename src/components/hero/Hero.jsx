@@ -31,11 +31,9 @@ const Hero = () => {
     }, [])
 
 
-    console.log(moviesList);
-
     return (
         <div className='hero-slice'>
-            <Swiper modules={[Autoplay]} grabCursor={true} spaceBetween={0} slicePerView={1}>
+            <Swiper modules={[Autoplay]} autoplay={{delay: 5000}} grabCursor={true} spaceBetween={0} slicePerView={1}>
                 {moviesList.map((item, i) => (
                     <SwiperSlide key={i}>
                         {({isActive}) => (
