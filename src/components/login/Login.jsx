@@ -36,7 +36,7 @@ const Login = () => {
                 const config = {
                     headers: {'content-type': 'multipart/form-data'}
                 }
-                const url = 'http://54.169.180.127/movie/api/basic/user/login';
+                const url = 'https://anhcuong.org/movie/api/basic/user/login';
                 axios.post(url, formData, config)
                     .then(response => {
                         const authData = response.data;

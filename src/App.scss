@@ -81,6 +81,10 @@ iframe {
 .section__header {
   @include flex(center, space-between);
 
+  & h1 {
+    color: #fff;
+  }
+
   & h2 {
     color: #fff;
   }

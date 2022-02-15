@@ -12,7 +12,7 @@ import axiosConfig from "../../api/axiosConfig";
 const MovieList = props => {
     const [items, setItems] = useState([]);
     useEffect(() => {
-        axiosConfig.get(`/api/basic/movie?typeId=${props.typeId}&categoryId=&order=&search=&order=`).then(res => {
+        axiosConfig.get(`/api/basic/movie/${props.param}`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data);
             }
@@ -27,7 +27,7 @@ const MovieList = props => {
     return (
         <div className='movies-list'>
             <Swiper grabCursor={true} spaceBetween={10} slidesPerView={'auto'}>
-                {items && items.content?.map((item) => (
+                {items && items?.map((item) => (
                     <SwiperSlide key={item.id}>
                         <MovieCard item={item}/>
                     </SwiperSlide>
