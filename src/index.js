@@ -6,7 +6,7 @@ import {BrowserRouter} from "react-router-dom";
 import ScrollToTop from "./config/ScrollToTop";
 
 ReactDOM.render(
-    <BrowserRouter>
+    <BrowserRouter basename='/film'>
         <ScrollToTop>
             <AuthProvider>
                 <React.StrictMode>
