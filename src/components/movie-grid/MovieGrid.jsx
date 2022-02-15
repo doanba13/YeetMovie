@@ -21,7 +21,7 @@ const MovieGrid = () => {
     });
 
     useEffect(() => {
-        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}&size=14`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data.content);
                 setTotalPage(res.data.data.totalPages);
@@ -43,7 +43,7 @@ const MovieGrid = () => {
     }, [])
 
     const loadMore = async () => {
-        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}&size=14`).then(res => {
             if (res.status === 200) {
                 setItems([...items, ...res.data.data.content]);
             }
@@ -54,7 +54,7 @@ const MovieGrid = () => {
         setPage(page + 1);
     }
     const goToSearch = () => {
-        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}&size=14`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data.content);
                 setTotalPage(res.data.data.totalPages);

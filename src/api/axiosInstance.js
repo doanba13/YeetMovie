@@ -2,7 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
 
-const baseURL = 'http://54.169.180.127/movie'
+const baseURL = 'https://54.169.180.127'
 
 let authTokens = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
 
@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(async req => {
 
     const user = jwt_decode(authTokens.accessToken);
     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-    
+
     if (!isExpired) return req
 
 
