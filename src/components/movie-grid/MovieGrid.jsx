@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {useHistory, useParams} from 'react-router';
+import {useParams} from 'react-router';
 import './movie-grid.scss';
 import MovieCard from '../movie-card/MovieCard';
 import Button, {OutlineButton} from '../button/Button';
@@ -8,6 +8,11 @@ import {message} from "antd";
 
 const MovieGrid = () => {
 
+    const moviesType = useParams();
+    console.log(moviesType)
+
+    const [movies, setMovies] = useState([]);
+    const [tvs, setTvs] = useState([]);
     const [items, setItems] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(0);
@@ -21,7 +26,7 @@ const MovieGrid = () => {
     });
 
     useEffect(() => {
-        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}&size=14`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page - 1}&size=42`).then(res => {
             if (res.status === 200) {
                 setItems(res.data.data.content);
                 setTotalPage(res.data.data.totalPages);
@@ -42,8 +47,18 @@ const MovieGrid = () => {
         })
     }, [])
 
+    useEffect(() => {
+        items.map(item => {
+            if (item.episodes.length === 1 && moviesType.category === 'movies') {
+                setMovies(prevState => [...prevState, item])
+            } else {
+                setTvs(prevState => [...prevState, item])
+            }
+        })
+    }, [items])
+
     const loadMore = async () => {
-        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}&size=14`).then(res => {
+        axiosConfig.get(`/api/basic/movie?typeId=${params.typeId}&categoryId=${params.categoryId}&order=${params.order}&search=${params.search}&order=&page=${page}&size=42`).then(res => {
             if (res.status === 200) {
                 setItems([...items, ...res.data.data.content]);
             }
@@ -113,7 +128,9 @@ const MovieGrid = () => {
             </div>
             <div className="movie-grid">
                 {
-                    items.map((item) => <MovieCard item={item} key={item.id}/>)
+                    moviesType.category === 'movies' ? movies.map(item => <MovieCard item={item}
+                                                                                     key={item.id}/>) : tvs.map(item =>
+                        <MovieCard item={item} key={item.id}/>)
                 }
             </div>
             {
@@ -126,42 +143,5 @@ const MovieGrid = () => {
         </>
     );
 }
-
-/* const MovieSearch = props => {
-
-    const history = useHistory();
-
-    const [keyword, setKeyword] = useState(props.keyword ? props.keyword : '');
-
-    const goToSearch = useCallback(
-        () => {
-            if (keyword.trim().length > 0) {
-                history.push(`/${category[props.category]}/search/${keyword}`);
-            }
-        },
-        [keyword, props.category, history]
-    );
-
-    useEffect(() => {
-        const enterEvent = (e) => {
-            e.preventDefault();
-            if (e.keyCode === 13) {
-                goToSearch();
-            }
-        }
-        document.addEventListener('keyup', enterEvent);
-        return () => {
-            document.removeEventListener('keyup', enterEvent);
-        };
-    }, [keyword, goToSearch]);
-
-    return (
-        <div className="movie-search">
-            <input className='input' type='text' placeholder="Enter keyword" value={keyword}
-                   onChange={(e) => setKeyword(e.target.value)}/>
-            <Button style={{marginLeft: '3rem'}} className="small" onClick={goToSearch}>Search</Button>
-        </div>
-    )
-} */
 
 export default MovieGrid;

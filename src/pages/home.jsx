@@ -10,39 +10,30 @@ const Home = () => {
             <div className="container">
                 <div className="section mb-3">
                     <div className="section__header mb-2">
-                        <h2>Trending Movies</h2>
+                        <h1>Trending</h1>
                         <Link to='/movies'>
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList typeId={10}/>
+                    <MovieList param={'offer'}/>
                 </div>
                 <div className="section mb-3">
                     <div className="section__header mb-2">
-                        <h2>Top Rated Movies</h2>
+                        <h1>Top Rated</h1>
                         <Link to='/movies'>
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList typeId={10}/>
+                    <MovieList param={'top-rate'}/>
                 </div>
                 <div className="section mb-3">
                     <div className="section__header mb-2">
-                        <h2>Trending TV Series</h2>
-                        <Link to='/tv'>
+                        <h1>New</h1>
+                        <Link to='/movies'>
                             <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
                         </Link>
                     </div>
-                    <MovieList typeId={11}/>
-                </div>
-                <div className="section mb-3">
-                    <div className="section__header mb-2">
-                        <h2>Top Rated TV Series</h2>
-                        <Link to='/tv'>
-                            <SmallOutlineButton classname='small'>See More</SmallOutlineButton>
-                        </Link>
-                    </div>
-                    <MovieList typeId={9}/>
+                    <MovieList param={'new'}/>
                 </div>
             </div>
         </>
