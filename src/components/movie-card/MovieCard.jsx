@@ -11,7 +11,7 @@ const MovieCard = props => {
     const link = `/movies/${props.item.id}`
     return (
         <Link to={link}>
-            <div className="movie-card" style={{backgroundImage: `url(http://54.169.180.127${props.item.avatar})`}}>
+            <div className="movie-card" style={{backgroundImage: `url(https://anhcuong.org${props.item.avatar})`}}>
                 <Button>
                     <i className="bx bx-play"></i>
                 </Button>
