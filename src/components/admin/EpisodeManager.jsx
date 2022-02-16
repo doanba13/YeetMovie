@@ -50,7 +50,7 @@ const EpisodeManager = () => {
     }
 
     const updateEpisodeHandler = () => {
-        axiosInstance.patch(`/api/episode/${epsVisible.id}`, {
+        axiosInstance.patch(`/api/episode/${epsVisible.id}`, path.length === 0 ? {name: epsTitle} : epsTitle.length === 0 ? {path: path} : {
             name: epsTitle,
             path: path
         }).then(res => {
