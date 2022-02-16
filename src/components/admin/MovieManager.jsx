@@ -3,6 +3,7 @@ import axiosInstance from "../../api/axiosInstance";
 import {Card, message, Space, Table, Modal, Button, Input} from "antd";
 import * as Yup from "yup";
 import {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
 
 const {TextArea} = Input;
 
@@ -13,13 +14,9 @@ const MovieManager = () => {
     const [categoryData, setCategoryData] = useState([]);
     const [typeData, setTypeData] = useState([]);
     const [page, setPage] = useState(1);
-
+    const history = useHistory();
     const [epsTitle, setEpsTitle] = useState('');
     const [path, setPath] = useState('');
-    const [epsVisible, setEpsVisible] = useState({
-        visible: false,
-        id: ''
-    });
 
 
     useEffect(() => {
@@ -68,7 +65,6 @@ const MovieManager = () => {
             img
         );
         console.log(formData)
-        console.log(img)
         axiosInstance.patch(`/api/movie/${id}/movie-image`, formData, {
             'Content-Type': 'multipart/form-data'
         }).then(res => {
@@ -96,28 +92,6 @@ const MovieManager = () => {
             });
         }
     ;
-
-    const epsTitleChangeHandler = (e) => {
-        setEpsTitle(e.target.value)
-    }
-    const epsPathChangeHandler = (e) => {
-        setPath(e.target.value)
-    }
-
-    const addEpisodeHandler = () => {
-        axiosInstance.post('/api/episode', {
-            name: epsTitle,
-            path: path,
-            movieId: epsVisible.id
-        }).then(res => {
-            if (res.status === 200) {
-                message.success('Add episode successfully!')
-            }
-        }).catch(err => {
-            console.log(err)
-            message.error('Add episode failed!')
-        })
-    }
 
     const columns = [
         {
@@ -147,11 +121,8 @@ const MovieManager = () => {
             render: (record) => (
                 <Space size="middle">
                     <a onClick={() => {
-                        setEpsVisible({
-                            visible: true,
-                            id: record.id
-                        })
-                    }}>Update Episode</a>
+                        history.push(`/admin/movie-manager/${record.id}`)
+                    }}>Episode manager</a>
                     <a onClick={() => {
                         axiosInstance.delete(`/api/movie/${record.id}`).then((res) => {
                             if (res.status === 200) {
@@ -171,21 +142,6 @@ const MovieManager = () => {
 
     return (
         <>
-            <Modal title="Add Episode" visible={epsVisible.visible} onOk={addEpisodeHandler}
-                   onCancel={() => setEpsVisible({
-                       visible: false,
-                       id: ''
-                   })}>
-                <label className='form-control1__label' style={{color: '#000'}} id='epsTitle'>Add Episode
-                    title</label>
-                <input type='text' style={{border: '1px solid #000', borderRadius: '5px'}} name='epsTitle'
-                       className='form-control1__input'
-                       onChange={epsTitleChangeHandler}/>
-                <label className='form-control1__label' style={{color: '#000'}} id='epsPath'>Add path</label>
-                <input type='text' style={{border: '1px solid #000', borderRadius: '5px'}} name='epsPath'
-                       className='form-control1__input'
-                       onChange={epsPathChangeHandler}/>
-            </Modal>
             <Card title='Movie Category'
                   style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}}
                   headStyle={{color: '#fff'}}>
