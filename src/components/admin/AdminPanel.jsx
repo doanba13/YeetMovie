@@ -29,9 +29,6 @@ const AdminPanel = () => {
                         <li className='sidebar__link'>
                             <Link to={`${url}/type-manager`}>Type Manager</Link>
                         </li>
-                        <li className='sidebar__link'>
-                            <Link to={`${url}/episode-manager`}>Episode Manager</Link>
-                        </li>
                         <li onClick={authCtx.logoutUser} className='sidebar__link'>
                             <a style={{color: '#ff0000', cursor: 'pointer'}}>Log Out</a>
                         </li>
@@ -45,7 +42,7 @@ const AdminPanel = () => {
                     <Route exact path={`${path}/movie-manager`} component={MovieManager}/>
                     <Route exact path={`${path}/category-manager`} component={CategoryManager}/>
                     <Route exact path={`${path}/type-manager`} component={TypeManager}/>
-                    <Route exact path={`${path}/episode-manager`} component={EpisodeManager}/>
+                    <Route exact path={`${path}/movie-manager/:movieId`} component={EpisodeManager}/>
                 </Switch>
             </div>
         </section>
