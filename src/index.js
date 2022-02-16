@@ -5,8 +5,10 @@ import {AuthProvider} from "./store/AuthContext";
 import {BrowserRouter} from "react-router-dom";
 import ScrollToTop from "./config/ScrollToTop";
 
+const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
+
 ReactDOM.render(
-    <BrowserRouter basename='/film'>
+    <BrowserRouter basename={baseUrl}>
         <ScrollToTop>
             <AuthProvider>
                 <React.StrictMode>
