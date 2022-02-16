@@ -2,7 +2,7 @@
   "name": "yeetmovie",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/film",
+  "homepage": "https://anhcuong.org/",
   "dependencies": {
     "@ant-design/dark-theme": "^2.0.2",
     "@testing-library/jest-dom": "^5.16.1",
