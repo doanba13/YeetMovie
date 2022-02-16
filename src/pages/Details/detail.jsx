@@ -79,7 +79,7 @@ const Detail = () => {
                         <div className="mb-3 movie-content container">
                             <div className="movie-content__poster">
                                 <div className="movie-content__poster__img"
-                                     style={{backgroundImage: `url(http://54.169.180.127${item.avatar})`}}></div>
+                                     style={{backgroundImage: `url(https://anhcuong.org${item.avatar})`}}></div>
                             </div>
                             <div className="movie-content__info">
                                 <h1 style={{color: '#fff'}} className="title">
