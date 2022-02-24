@@ -15,9 +15,7 @@ const MovieManager = () => {
     const [typeData, setTypeData] = useState([]);
     const [page, setPage] = useState(1);
     const history = useHistory();
-    const [epsTitle, setEpsTitle] = useState('');
-    const [path, setPath] = useState('');
-
+    const [isModalVisible, setIsModalVisible] = useState({show: false, id: ''});
 
     useEffect(() => {
         axiosInstance.get(`/api/basic/category?search=&order=desc`).then(res => {
@@ -58,13 +56,11 @@ const MovieManager = () => {
         setImg(event.target.files[0]);
     };
     const onFileUpload = (id) => {
-        console.log(id)
         const formData = new FormData();
         formData.append(
             "image",
             img
         );
-        console.log(formData)
         axiosInstance.patch(`/api/movie/${id}/movie-image`, formData, {
             'Content-Type': 'multipart/form-data'
         }).then(res => {
@@ -76,22 +72,6 @@ const MovieManager = () => {
             message.success('Thumbnail upload failed ;(')
         })
     };
-
-    const addMovieThumbnail = (id) => {
-            Modal.confirm({
-                title: 'Movie thumbnail',
-                content: (
-                    <div className='form-control1'>
-                        <input className='form-control1__input' type="file" onChange={onFileChange}/>
-                        <button style={{width: '50%', marginTop: '.5rem'}} className='btn' onClick={() => onFileUpload(id)}>
-                            Upload
-                        </button>
-                    </div>
-                ),
-                okText: 'ok',
-            });
-        }
-    ;
 
     const columns = [
         {
@@ -112,7 +92,10 @@ const MovieManager = () => {
             key: 'avatar',
             align: 'center',
             render: (avatar, record) => (
-                <a onClick={() => addMovieThumbnail(record.id)}>{!avatar ? 'Add movie thumbnail' : 'Update movie thumbnail'}</a>
+                <a onClick={() => setIsModalVisible({
+                    show: true,
+                    id: record.id
+                })}>{!avatar ? 'Add movie thumbnail' : 'Update movie thumbnail'}</a>
             )
         },
         {
@@ -142,6 +125,16 @@ const MovieManager = () => {
 
     return (
         <>
+            <Modal title="Add movie thumbnail" visible={isModalVisible.show}
+                   onCancel={() => setIsModalVisible({show: false, id: ''})}>
+                <div className='form-control1'>
+                    <input className='form-control1__input' type="file" onChange={onFileChange}/>
+                    <button style={{width: '50%', marginTop: '.5rem'}} className='btn'
+                            onClick={() => onFileUpload(isModalVisible.id)}>
+                        Upload
+                    </button>
+                </div>
+            </Modal>
             <Card title='Movie Category'
                   style={{fontSize: '1.6rem', backgroundColor: '#1B1B1B', borderRadius: '5px'}}
                   headStyle={{color: '#fff'}}>

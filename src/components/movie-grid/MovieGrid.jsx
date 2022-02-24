@@ -49,7 +49,7 @@ const MovieGrid = () => {
 
     useEffect(() => {
         items.map(item => {
-            if (item.episodes.length === 1 && moviesType.category === 'movies') {
+            if (item.episodes?.length === 1 && moviesType.category === 'movies') {
                 setMovies(prevState => [...prevState, item])
             } else {
                 setTvs(prevState => [...prevState, item])
