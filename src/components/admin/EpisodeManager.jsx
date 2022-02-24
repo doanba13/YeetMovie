@@ -61,6 +61,10 @@ const EpisodeManager = () => {
             console.log(err)
             message.error('Update episode failed!')
         })
+        console.log(path.length === 0 ? {name: epsTitle} : epsTitle.length === 0 ? {path: path} : {
+            name: epsTitle,
+            path: path
+        })
     };
 
     const columns = [
