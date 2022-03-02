@@ -74,7 +74,7 @@ const Header = () => {
                             <div className='user'>
                                 <div className='user__logo'>
                                     <Avatar size='large'
-                                            src={authCtx.userData?.avatar ? `http://54.169.180.127${authCtx.userData?.avatar}` : 'https://joeschmoe.io/api/v1/random'}
+                                            src={authCtx.userData?.avatar ? `https://anhcuong.org${authCtx.userData?.avatar}` : 'https://joeschmoe.io/api/v1/random'}
                                             alt="Han Solo"/>
                                 </div>
                             </div>

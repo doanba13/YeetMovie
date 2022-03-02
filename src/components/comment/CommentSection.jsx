@@ -57,7 +57,7 @@ const CommentSection = (props) => {
                 authCtx.user &&
                 <Comment
                     avatar={<Avatar
-                        src={authCtx.userData?.avatar ? `http://54.169.180.127${authCtx.userData?.avatar}` : 'https://joeschmoe.io/api/v1/random'}
+                        src={authCtx.userData?.avatar ? `https://anhcuong.org${authCtx.userData?.avatar}` : 'https://joeschmoe.io/api/v1/random'}
                         alt="Han Solo"/>}
                     content={
                         <Editor

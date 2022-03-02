@@ -58,7 +58,7 @@ const Detail = () => {
                             {item.user.username} commented in {epsNname}
                         </p>
                     ),
-                    avatar: item.user.avatar ? `http://54.169.180.127${item.user.avatar}` : 'https://joeschmoe.io/api/v1/random',
+                    avatar: item.user.avatar ? `https://anhcuong.org${item.user.avatar}` : 'https://joeschmoe.io/api/v1/random',
                     content: (
                         <p style={{color: '#fff'}}>
                             {item.content}
