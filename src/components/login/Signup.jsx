@@ -45,7 +45,7 @@ const Signup = () => {
                     password: values.password,
                     email: values.email,
                 };
-                const url = 'http://54.169.180.127/movie/api/basic/user/create';
+                const url = 'https://anhcuong.org/movie/api/basic/user/create';
                 axios.post(
                     url,
                     data,
