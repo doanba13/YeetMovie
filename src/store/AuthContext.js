@@ -51,7 +51,7 @@ export const AuthProvider = ({children}) => {
         setUserData(null)
         localStorage.removeItem('authTokens')
         localStorage.removeItem('userData')
-        history.replace('/login')
+        history.replace('/')
         window.location.reload(false)
     }
 
