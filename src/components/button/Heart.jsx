@@ -6,7 +6,7 @@ import authContext from "../../store/AuthContext";
 
 const Heart = (props) => {
     const authCtx = useContext(authContext)
-    const [like, setLike] = useState(props.eps?.likes.length > 0);
+    const [like, setLike] = useState(props.eps?.likes?.length > 0);
     const likeHandler = () => {
         setLike(!like)
         if (authCtx.user) {
